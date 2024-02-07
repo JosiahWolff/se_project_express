@@ -23,6 +23,9 @@ Implements comprehensive error handling mechanisms to gracefully manage unexpect
 
 In summary, this backend project serves as the backbone for the WTWR application, providing robust APIs and efficient data management capabilities for users and their clothing items.
 
+## Link to Front End
+[WTWR Front-end](https://github.com/JosiahWolff/se_project_react)
+
 ## Running the Project
 
 `npm run start` — to launch the server
