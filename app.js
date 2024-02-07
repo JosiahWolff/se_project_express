@@ -20,7 +20,7 @@ const routes = require("./routes");
 
 app.use(express.json());
 
-app.use(helmet);
+app.use(helmet());
 
 app.use(routes);
 
