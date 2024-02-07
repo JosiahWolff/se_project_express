@@ -19,7 +19,7 @@ router.delete("/:itemId", deleteItem);
 // like
 router.put("/:id/likes", likeItem);
 
-//dislike
+// dislike
 router.delete("/:id/likes", dislikeItem);
 
 module.exports = router;

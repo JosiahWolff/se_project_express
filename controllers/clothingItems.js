@@ -16,10 +16,10 @@ const getItems = (req, res) => {
 };
 
 const createItem = (req, res) => {
-  const { name, weather, imageURL } = req.body;
+  const { name, weather, imageUrl } = req.body;
   const owner = req.user._id;
 
-  ClothingItem.create({ name, weather, imageURL, owner })
+  ClothingItem.create({ name, weather, imageUrl, owner })
     .then((item) => {
       res.status(200).send({ data: item });
     })
@@ -37,12 +37,11 @@ const createItem = (req, res) => {
 };
 
 const likeItem = (req, res) => {
-  clothingItem
-    .findByIdAndUpdate(
-      req.params.id,
-      { $addToSet: { likes: req.user._id } },
-      { new: true },
-    )
+  ClothingItem.findByIdAndUpdate(
+    req.params.id,
+    { $addToSet: { likes: req.user._id } },
+    { new: true },
+  )
     .orFail()
     .then((item) => {
       res.status(200).send(item);
@@ -65,12 +64,11 @@ const likeItem = (req, res) => {
 };
 
 const dislikeItem = (req, res) => {
-  clothingItem
-    .findByIdAndUpdate(
-      req.params.id,
-      { $pull: { likes: req.user._id } },
-      { new: true },
-    )
+  ClothingItem.findByIdAndUpdate(
+    req.params.id,
+    { $pull: { likes: req.user._id } },
+    { new: true },
+  )
     .orFail()
     .then((item) => {
       res.status(200).send(item);
@@ -100,7 +98,7 @@ const deleteItem = (req, res) => {
   console.log(itemId);
   ClothingItem.findByIdAndDelete(itemId)
     .orFail()
-    .then((item) => res.status(204).send({}))
+    .then((item) => res.status(200).send({ data: item }))
     .catch((e) => {
       console.error(e);
 
