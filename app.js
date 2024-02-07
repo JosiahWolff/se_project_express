@@ -2,6 +2,8 @@ const express = require("express");
 
 const mongoose = require("mongoose");
 
+const helmet = require("helmet");
+
 const app = express();
 const { PORT = 3001 } = process.env;
 
@@ -17,6 +19,9 @@ app.use((req, res, next) => {
 const routes = require("./routes");
 
 app.use(express.json());
+
+app.use(helmet);
+
 app.use(routes);
 
 app.listen(PORT, () => {
