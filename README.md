@@ -1,6 +1,6 @@
 # WTWR (What to Wear?): Back End
 
-This project is a backend server implementation tailored for the WTWR (What To Wear) application. Primarily, it emphasizes building a robust API and handling server-side operations. The core functionality revolves around managing user data and clothing items, enabling users to interact with the application seamlessly.
+This project is a backend server implementation tailored for the WTWR (What To Wear) application. Primarily, it emphasizes building an API and handling server-side operations. The core functionality revolves around managing user data and clothing items, enabling users to interact with the application seamlessly.
 
 ## Key Features
 
