@@ -1,26 +1,30 @@
 # WTWR (What to Wear?): Back End
 
-This project is a backend server implementation tailored for the WTWR (What To Wear) application. Primarily, it emphasizes building a robust API and handling server-side operations. The core functionality revolves around managing user data and clothing items, enabling users to interact with the application seamlessly.
+This project is a backend server implementation tailored for the WTWR (What To Wear) application. Primarily, it emphasizes building an API and handling server-side operations. The core functionality revolves around managing user data and clothing items, enabling users to interact with the application seamlessly.
 
-Key Features:
+## Key Features
 
-Express Framework: The server utilizes Express.js, a minimalist web framework for Node.js, to streamline route handling and middleware management.
+### Express Framework
+Utilizes Express.js, a minimalist web framework for Node.js, for efficient route handling and middleware management.
 
-MongoDB Integration: Data persistence is managed through MongoDB, a NoSQL database, using Mongoose, an elegant MongoDB object modeling tool designed for Node.js.
+### MongoDB Integration
+Implements data persistence through MongoDB, a NoSQL database, utilizing Mongoose, an elegant MongoDB object modeling tool designed for Node.js.
 
-User Management:
+### User Management
+User Model: Defines a user model with essential attributes such as name and avatar, ensuring data integrity through validation.
+User Operations: Supports CRUD (Create, Read, Update, Delete) operations for users, allowing for the management of user data.
 
-User Model: A user model is defined with essential attributes such as name and avatar. These attributes are validated to ensure data integrity.
-User Operations: The server supports CRUD (Create, Read, Update, Delete) operations for users, allowing for the creation, retrieval, and modification of user data.
+### Clothing Item Management
+Clothing Item Model: Establishes a clothing item model encapsulating details like name, weather suitability, and image URL, with enforced data validation.
+Clothing Item Operations: Facilitates CRUD operations for clothing items, enabling users to manage their wardrobe effectively.
 
-Clothing Item Management:
-
-Clothing Item Model: A clothing item model is established, encapsulating details like name, weather suitability, and image URL. Data validation is enforced to maintain consistency.
-Clothing Item Operations: Similar to user management, the server facilitates CRUD operations for clothing items, enabling users to manage their wardrobe effectively.
-
-Error Handling: Comprehensive error handling mechanisms are implemented to gracefully manage unexpected scenarios. Different error types, including validation errors and server errors, are identified and appropriately responded to.
+### Error Handling
+Implements comprehensive error handling mechanisms to gracefully manage unexpected scenarios, identifying and responding to different error types.
 
 In summary, this backend project serves as the backbone for the WTWR application, providing robust APIs and efficient data management capabilities for users and their clothing items.
+
+## Link to Front End
+[WTWR Front-end](https://github.com/JosiahWolff/se_project_react)
 
 ## Running the Project
 
