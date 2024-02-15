@@ -7,6 +7,8 @@ const {
   invalidDataError,
   notFoundError,
   serverError,
+  unauthorizedError,
+  conflictError,
 } = require("../utils/errors");
 
 const getCurrentUser = (req, res) => {
