@@ -5,24 +5,46 @@ const {
   serverError,
 } = require("../utils/errors");
 
-const getUsers = (req, res) => {
-  User.find({})
-    .then((users) => res.send(users))
-    .catch((err) => {
-      console.error(err);
+const getCurrentUser = (req, res) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      if (!user) {
+        throw new Error("User not found");
+      }
+      return res.status(200).send({ data: user });
+    })
+    .catch((e) => {
+      console.error(e);
 
-      res.status(serverError).send({ message: "Server error from getUsers" });
+      if (e.name === "CastError") {
+        res.status(invalidDataError).send({ message: "Invalid data" });
+      } else if (e.message === "User not found") {
+        res.status(notFoundError).send({ message: "User not found" });
+      } else {
+        res
+          .status(serverError)
+          .send({ message: "Server error from getCurrentUser" });
+      }
     });
 };
 
-const getUser = (req, res) => {
-  const { userId } = req.params;
-  User.findById(userId)
+const updateUser = (req, res) => {
+  const { name, avatar } = req.body;
+
+  User.findByIdAndUpdate(
+    req.user._id,
+    { name, avatar },
+    { new: true, runValidators: true },
+  )
     .orFail()
-    .then((user) => res.status(200).send(user))
+    .then((user) => {
+      if (!user) {
+        return Promise.reject(new Error("User not found"));
+      }
+      return res.send({ data: user });
+    })
     .catch((e) => {
       console.error(e);
-      console.log(e.name);
 
       if (e.name === "ValidationError") {
         res.status(invalidDataError).send({ message: "Invalid data" });
@@ -33,16 +55,29 @@ const getUser = (req, res) => {
           .status(notFoundError)
           .send({ message: "Requested resource not found" });
       } else {
-        res.status(serverError).send({ message: "Server error from getUser" });
+        res.status(serverError).send({ message: "Server error in updateUser" });
       }
     });
 };
 
 const createUser = (req, res) => {
-  const { name, avatar } = req.body;
+  const { name, avatar, email, password } = req.body;
 
-  User.create({ name, avatar })
-    .then((user) => res.status(201).send(user))
+  User.findOne({ email })
+    .then((existingUser) => {
+      if (existingUser) {
+        throw new Error("Email already in use");
+      }
+      return bcrypt.hash(password, 10);
+    })
+    .then((hash) => User.create({ name, avatar, email, password: hash }))
+    .then((user) => {
+      const response = user.toObject();
+      delete response.password;
+      res.status(201).send({
+        data: response,
+      });
+    })
     .catch((e) => {
       console.error(e);
 
@@ -50,6 +85,10 @@ const createUser = (req, res) => {
         res.status(invalidDataError).send({ message: "Invalid data" });
       } else if (e.name === "CastError") {
         res.status(invalidDataError).send({ message: "Invalid data" });
+      } else if (e.message === "Email already in use") {
+        res
+          .status(conflictError)
+          .send({ message: "Email already exists in database" });
       } else {
         res
           .status(serverError)
@@ -58,8 +97,44 @@ const createUser = (req, res) => {
     });
 };
 
+const login = (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email) {
+    res.status(invalidDataError).send({ message: "Invalid Email" });
+    return;
+  }
+
+  if (!password) {
+    res.status(invalidDataError).send({ message: "Invalid Password" });
+    return;
+  }
+
+  User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+        expiresIn: "7d",
+      });
+      res.status(200).send({ data: token });
+    })
+    .catch((e) => {
+      console.error(e);
+
+      if (e.message === "Incorrect email or password") {
+        res
+          .status(unauthorizedError)
+          .send({ message: "Incorrect email or password" });
+      } else {
+        res
+          .status(serverError)
+          .send({ message: "An error occurred on the server" });
+      }
+    });
+};
+
 module.exports = {
-  getUsers,
+  getCurrentUser,
+  updateUser,
   createUser,
-  getUser,
+  login,
 };

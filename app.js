@@ -1,3 +1,5 @@
+const cors = require("cors");
+
 const express = require("express");
 
 const mongoose = require("mongoose");
@@ -9,18 +11,14 @@ const { PORT = 3001 } = process.env;
 
 mongoose.connect("mongodb://127.0.0.1:27017/wtwr_db");
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: "65c1398dc1817900d0bffa05",
-  };
-  next();
-});
-
 const routes = require("./routes");
 
+app.use(cors());
 app.use(express.json());
-
 app.use(helmet());
+
+app.post("/signin", login);
+app.post("/signup", createUser);
 
 app.use(routes);
 
