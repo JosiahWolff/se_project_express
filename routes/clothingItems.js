@@ -10,9 +10,6 @@ const {
 // Create
 router.post("/", createItem);
 
-// Reutrn all clothing
-router.get("/", getItems);
-
 // Delete
 router.delete("/:itemId", deleteItem);
 
