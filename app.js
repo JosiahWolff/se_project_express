@@ -11,6 +11,7 @@ const { PORT = 3001 } = process.env;
 
 const { createUser, login } = require("./controllers/users");
 const { getItems } = require("./controllers/clothingItems");
+const authen = require("./middlewares/auth");
 
 mongoose.connect("mongodb://127.0.0.1:27017/wtwr_db");
 
@@ -24,6 +25,7 @@ app.post("/signin", login);
 app.post("/signup", createUser);
 app.get("/items", getItems);
 
+app.use(authen);
 app.use(routes);
 
 app.listen(PORT, () => {
