@@ -33,9 +33,7 @@ In summary, this backend project serves as the backbone for the WTWR application
 [WTWR Front-end](https://github.com/JosiahWolff/se_project_react)
 
 ## Domain Names
-
-    normal - wtwrByJosiah3311.crabdance.com
-
+normal - wtwrByJosiah3311.crabdance.com
 www - www.wtwrByJosiah3311.crabdance.com
 api - api.wtwrByJosiah3311.crabdance.com
 
