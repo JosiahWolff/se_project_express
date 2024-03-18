@@ -1,6 +1,6 @@
 const ClothingItem = require("../models/clothingItem");
 const {
-  invalidDataError,
+  BadRequestError,
   notFoundError,
   serverError,
   forbiddenError,
@@ -11,8 +11,7 @@ const getItems = (req, res) => {
     .then((items) => res.status(200).send(items))
     .catch((e) => {
       console.error(e);
-
-      res.status(serverError).send({ message: "Server error from getItems" });
+      next(err);
     });
 };
 
@@ -28,11 +27,11 @@ const createItem = (req, res) => {
       console.error(e);
 
       if (e.name === "ValidationError") {
-        res.status(invalidDataError).send({ message: "Invalid data" });
+        res.status(BadRequestError).send({ message: "Invalid data" });
       } else if (e.name === "CastError") {
-        res.status(invalidDataError).send({ message: "Invalid data" });
+        res.status(BadRequestError).send({ message: "Invalid data" });
       } else {
-        res.status(serverError).send({ message: "Server error in createItem" });
+        next(err);
       }
     });
 };
@@ -51,15 +50,15 @@ const likeItem = (req, res) => {
       console.error(e);
 
       if (e.name === "ValidationError") {
-        res.status(invalidDataError).send({ message: "Invalid data" });
+        res.status(BadRequestError).send({ message: "Invalid data" });
       } else if (e.name === "CastError") {
-        res.status(invalidDataError).send({ message: "Invalid data" });
+        res.status(BadRequestError).send({ message: "Invalid data" });
       } else if (e.name === "DocumentNotFoundError") {
         res
           .status(notFoundError)
           .send({ message: "Requested resource not found" });
       } else {
-        res.status(serverError).send({ message: "Server error in likeItem" });
+        next(err);
       }
     });
 };
@@ -78,17 +77,15 @@ const dislikeItem = (req, res) => {
       console.error(e);
 
       if (e.name === "ValidationError") {
-        res.status(invalidDataError).send({ message: "Invalid data" });
+        res.status(BadRequestError).send({ message: "Invalid data" });
       } else if (e.name === "CastError") {
-        res.status(invalidDataError).send({ message: "Invalid data" });
+        res.status(BadRequestError).send({ message: "Invalid data" });
       } else if (e.name === "DocumentNotFoundError") {
         res
           .status(notFoundError)
           .send({ message: "Requested resource not found" });
       } else {
-        res
-          .status(serverError)
-          .send({ message: "Server error in dislike item" });
+        next(err);
       }
     });
 };
@@ -113,15 +110,15 @@ const deleteItem = (req, res) => {
       console.error(e);
 
       if (e.name === "ValidationError") {
-        res.status(invalidDataError).send({ message: "Invalid data" });
+        res.status(BadRequestError).send({ message: "Invalid data" });
       } else if (e.name === "CastError") {
-        res.status(invalidDataError).send({ message: "Invalid data" });
+        res.status(BadRequestError).send({ message: "Invalid data" });
       } else if (e.name === "DocumentNotFoundError") {
         res
           .status(notFoundError)
           .send({ message: "Requested resource not found" });
       } else {
-        res.status(serverError).send({ message: "Server error in deleteItem" });
+        next(err);
       }
     });
 };

@@ -1,10 +1,10 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
-const { JWT_SECRET } = require("../utils/config");
+const { defaultSecret } = require("../utils/config");
 
 const {
-  invalidDataError,
+  BadRequestError,
   notFoundError,
   serverError,
   unauthorizedError,
@@ -23,7 +23,7 @@ const getCurrentUser = (req, res) => {
       console.error(e);
 
       if (e.name === "CastError") {
-        res.status(invalidDataError).send({ message: "Invalid data" });
+        res.status(BadRequestError).send({ message: "Invalid data" });
       } else if (e.message === "User not found") {
         res.status(notFoundError).send({ message: "User not found" });
       } else {
@@ -53,9 +53,9 @@ const updateUser = (req, res) => {
       console.error(e);
 
       if (e.name === "ValidationError") {
-        res.status(invalidDataError).send({ message: "Invalid data" });
+        res.status(BadRequestError).send({ message: "Invalid data" });
       } else if (e.name === "CastError") {
-        res.status(invalidDataError).send({ message: "Invalid data" });
+        res.status(BadRequestError).send({ message: "Invalid data" });
       } else if (e.name === "DocumentNotFoundError") {
         res
           .status(notFoundError)
@@ -88,9 +88,9 @@ const createUser = (req, res) => {
       console.error(e);
 
       if (e.name === "ValidationError") {
-        res.status(invalidDataError).send({ message: "Invalid data" });
+        res.status(BadRequestError).send({ message: "Invalid data" });
       } else if (e.name === "CastError") {
-        res.status(invalidDataError).send({ message: "Invalid data" });
+        res.status(BadRequestError).send({ message: "Invalid data" });
       } else if (e.message === "Email already in use") {
         res
           .status(conflictError)
@@ -107,18 +107,18 @@ const login = (req, res) => {
   const { email, password } = req.body;
 
   if (!email) {
-    res.status(invalidDataError).send({ message: "Invalid Email" });
+    res.status(BadRequestError).send({ message: "Invalid Email" });
     return;
   }
 
   if (!password) {
-    res.status(invalidDataError).send({ message: "Invalid Password" });
+    res.status(BadRequestError).send({ message: "Invalid Password" });
     return;
   }
 
   User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+      const token = jwt.sign({ _id: user._id }, defaultSecret, {
         expiresIn: "7d",
       });
       res.status(200).send({ data: token });
