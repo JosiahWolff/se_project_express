@@ -1,10 +1,7 @@
 const ClothingItem = require("../models/clothingItem");
-const {
-  BadRequestError,
-  notFoundError,
-  serverError,
-  forbiddenError,
-} = require("../utils/errors");
+const { BadRequestError } = require("../utils/moreErrors/BadRequestError");
+const { NotFoundError } = require("../utils/moreErrors/NotFoundError");
+const { ForbiddenError } = require("../utils/moreErrors/ForbiddenError");
 
 const getItems = (req, res) => {
   ClothingItem.find({})
@@ -27,9 +24,9 @@ const createItem = (req, res) => {
       console.error(e);
 
       if (e.name === "ValidationError") {
-        res.status(BadRequestError).send({ message: "Invalid data" });
+        next(BadRequestError).send({ message: "Invalid data" });
       } else if (e.name === "CastError") {
-        res.status(BadRequestError).send({ message: "Invalid data" });
+        next(BadRequestError).send({ message: "Invalid data" });
       } else {
         next(err);
       }
@@ -50,13 +47,11 @@ const likeItem = (req, res) => {
       console.error(e);
 
       if (e.name === "ValidationError") {
-        res.status(BadRequestError).send({ message: "Invalid data" });
+        next(BadRequestError).send({ message: "Invalid data" });
       } else if (e.name === "CastError") {
-        res.status(BadRequestError).send({ message: "Invalid data" });
+        next(BadRequestError).send({ message: "Invalid data" });
       } else if (e.name === "DocumentNotFoundError") {
-        res
-          .status(notFoundError)
-          .send({ message: "Requested resource not found" });
+        next(NotFoundError).send({ message: "Requested resource not found" });
       } else {
         next(err);
       }
@@ -77,13 +72,11 @@ const dislikeItem = (req, res) => {
       console.error(e);
 
       if (e.name === "ValidationError") {
-        res.status(BadRequestError).send({ message: "Invalid data" });
+        next(BadRequestError).send({ message: "Invalid data" });
       } else if (e.name === "CastError") {
-        res.status(BadRequestError).send({ message: "Invalid data" });
+        next(BadRequestError).send({ message: "Invalid data" });
       } else if (e.name === "DocumentNotFoundError") {
-        res
-          .status(notFoundError)
-          .send({ message: "Requested resource not found" });
+        next(NotFoundError).send({ message: "Requested resource not found" });
       } else {
         next(err);
       }
@@ -98,9 +91,9 @@ const deleteItem = (req, res) => {
     .orFail()
     .then((item) => {
       if (!item.owner.equals(req.user._id)) {
-        return res
-          .status(forbiddenError)
-          .send({ message: "You are not authorized to delete this item" });
+        return next(ForbiddenError).send({
+          message: "You are not authorized to delete this item",
+        });
       }
       return item.deleteOne().then(() => {
         res.status(200).send({ data: item, message: "Item deleted" });
@@ -110,13 +103,11 @@ const deleteItem = (req, res) => {
       console.error(e);
 
       if (e.name === "ValidationError") {
-        res.status(BadRequestError).send({ message: "Invalid data" });
+        next(BadRequestError).send({ message: "Invalid data" });
       } else if (e.name === "CastError") {
-        res.status(BadRequestError).send({ message: "Invalid data" });
+        next(BadRequestError).send({ message: "Invalid data" });
       } else if (e.name === "DocumentNotFoundError") {
-        res
-          .status(notFoundError)
-          .send({ message: "Requested resource not found" });
+        next(NotFoundError).send({ message: "Requested resource not found" });
       } else {
         next(err);
       }

@@ -28,16 +28,13 @@ Implements comprehensive error handling mechanisms to gracefully manage unexpect
 
 In summary, this backend project serves as the backbone for the WTWR application, providing robust APIs and efficient data management capabilities for users and their clothing items.
 
-## Link to Front End
+## Link to Front End Git Repo
 
 [WTWR Front-end](https://github.com/JosiahWolff/se_project_react)
 
-## Domain Names
+## Link To Project
 
-    normal - wtwrByJosiah3311.crabdance.com
-
-www - www.wtwrByJosiah3311.crabdance.com
-api - api.wtwrByJosiah3311.crabdance.com
+www.wtwrByJosiah3311.crabdance.com
 
 ## Running the Project
 

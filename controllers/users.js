@@ -3,13 +3,11 @@ const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const { defaultSecret } = require("../utils/config");
 
-const {
-  BadRequestError,
-  notFoundError,
-  serverError,
-  unauthorizedError,
-  conflictError,
-} = require("../utils/errors");
+const { serverError } = require("../utils/errors");
+const { BadRequestError } = require("../utils/moreErrors/BadRequestError");
+const { NotFoundError } = require("../utils/moreErrors/NotFoundError");
+const { UnauthorizedError } = require("../utils/moreErrors/UnauthorizedError");
+const { ConflictError } = require("../utils/moreErrors/ConflictError");
 
 const getCurrentUser = (req, res) => {
   User.findById(req.user._id)
@@ -23,13 +21,11 @@ const getCurrentUser = (req, res) => {
       console.error(e);
 
       if (e.name === "CastError") {
-        res.status(BadRequestError).send({ message: "Invalid data" });
+        next(BadRequestError).send({ message: "Invalid data" });
       } else if (e.message === "User not found") {
-        res.status(notFoundError).send({ message: "User not found" });
+        next(NotFoundError).send({ message: "User not found" });
       } else {
-        res
-          .status(serverError)
-          .send({ message: "Server error from getCurrentUser" });
+        next(serverError).send({ message: "Server error from getCurrentUser" });
       }
     });
 };
@@ -53,15 +49,13 @@ const updateUser = (req, res) => {
       console.error(e);
 
       if (e.name === "ValidationError") {
-        res.status(BadRequestError).send({ message: "Invalid data" });
+        next(BadRequestError).send({ message: "Invalid data" });
       } else if (e.name === "CastError") {
-        res.status(BadRequestError).send({ message: "Invalid data" });
+        next(BadRequestError).send({ message: "Invalid data" });
       } else if (e.name === "DocumentNotFoundError") {
-        res
-          .status(notFoundError)
-          .send({ message: "Requested resource not found" });
+        next(NotFoundError).send({ message: "Requested resource not found" });
       } else {
-        res.status(serverError).send({ message: "Server error in updateUser" });
+        next(serverError).send({ message: "Server error in updateUser" });
       }
     });
 };
@@ -88,17 +82,15 @@ const createUser = (req, res) => {
       console.error(e);
 
       if (e.name === "ValidationError") {
-        res.status(BadRequestError).send({ message: "Invalid data" });
+        next(BadRequestError).send({ message: "Invalid data" });
       } else if (e.name === "CastError") {
-        res.status(BadRequestError).send({ message: "Invalid data" });
+        next(BadRequestError).send({ message: "Invalid data" });
       } else if (e.message === "Email already in use") {
-        res
-          .status(conflictError)
-          .send({ message: "Email already exists in database" });
+        next(ConflictError).send({
+          message: "Email already exists in database",
+        });
       } else {
-        res
-          .status(serverError)
-          .send({ message: "Server error from createUser" });
+        next(serverError).send({ message: "Server error from createUser" });
       }
     });
 };
@@ -107,12 +99,12 @@ const login = (req, res) => {
   const { email, password } = req.body;
 
   if (!email) {
-    res.status(BadRequestError).send({ message: "Invalid Email" });
+    next(BadRequestError).send({ message: "Invalid Email" });
     return;
   }
 
   if (!password) {
-    res.status(BadRequestError).send({ message: "Invalid Password" });
+    next(BadRequestError).send({ message: "Invalid Password" });
     return;
   }
 
@@ -127,13 +119,11 @@ const login = (req, res) => {
       console.error(e);
 
       if (e.message === "Incorrect email or password") {
-        res
-          .status(unauthorizedError)
-          .send({ message: "Incorrect email or password" });
+        next(UnauthorizedError).send({
+          message: "Incorrect email or password",
+        });
       } else {
-        res
-          .status(serverError)
-          .send({ message: "An error occurred on the server" });
+        next(serverError).send({ message: "An error occurred on the server" });
       }
     });
 };

@@ -6,6 +6,7 @@ const helmet = require("helmet");
 const { errors } = require("celebrate");
 const errorHandler = require("./middlewares/errorHandler");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
+const { validateNewUser, validateLogIn } = require("./middlewares/validation");
 
 console.log(process.env.NODE_ENV);
 
@@ -30,15 +31,15 @@ app.get("/crash-test", () => {
     throw new Error("Server will crash now");
   }, 0);
 });
+app.use(errorLogger);
+app.use(requestLogger);
 
-app.post("/signin", login);
-app.post("/signup", createUser);
+app.post("/signin", validateLogIn, login);
+app.post("/signup", validateNewUser, createUser);
 app.get("/items", getItems);
 
 app.use(authen);
-app.use(requestLogger);
 app.use(routes);
-app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
 

@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken");
 const { defaultSecret } = require("../utils/config");
-const { unauthorizedError } = require("../utils/errors");
+const { UnauthorizedError } = require("../utils/moreErrors/UnauthorizedError");
 
 const authError = (res) => {
-  res.status(unauthorizedError).send({ message: "Authorization Required" });
+  res.status(UnauthorizedError).send({ message: "Authorization Required" });
 };
 
 module.exports = (req, res, next) => {
