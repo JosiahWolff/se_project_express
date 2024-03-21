@@ -1,4 +1,4 @@
-//const NODE_ENV = production;
+// const NODE_ENV = production;
 const defaultSecret = "SecretPassword";
 
 if (process.env.NODE_ENV === "development") {

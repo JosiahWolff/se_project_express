@@ -3,13 +3,13 @@ const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const { defaultSecret } = require("../utils/config");
 
-const { serverError } = require("../utils/errors");
-const { BadRequestError } = require("../utils/moreErrors/BadRequestError");
-const { NotFoundError } = require("../utils/moreErrors/NotFoundError");
-const { UnauthorizedError } = require("../utils/moreErrors/UnauthorizedError");
-const { ConflictError } = require("../utils/moreErrors/ConflictError");
+const ServerError = require("../utils/errors");
+const BadRequestError = require("../utils/moreErrors/BadRequestError");
+const NotFoundError = require("../utils/moreErrors/NotFoundError");
+const UnauthorizedError = require("../utils/moreErrors/UnauthorizedError");
+const ConflictError = require("../utils/moreErrors/ConflictError");
 
-const getCurrentUser = (req, res) => {
+const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
     .then((user) => {
       if (!user) {
@@ -21,16 +21,16 @@ const getCurrentUser = (req, res) => {
       console.error(e);
 
       if (e.name === "CastError") {
-        next(BadRequestError).send({ message: "Invalid data" });
+        next(new BadRequestError("Invalid data"));
       } else if (e.message === "User not found") {
-        next(NotFoundError).send({ message: "User not found" });
+        next(new NotFoundError("User not found"));
       } else {
-        next(serverError).send({ message: "Server error from getCurrentUser" });
+        next(new ServerError("Server error from getCurrentUser"));
       }
     });
 };
 
-const updateUser = (req, res) => {
+const updateUser = (req, res, next) => {
   const { name, avatar } = req.body;
 
   User.findByIdAndUpdate(
@@ -49,18 +49,18 @@ const updateUser = (req, res) => {
       console.error(e);
 
       if (e.name === "ValidationError") {
-        next(BadRequestError).send({ message: "Invalid data" });
+        next(new BadRequestError("Invalid data"));
       } else if (e.name === "CastError") {
-        next(BadRequestError).send({ message: "Invalid data" });
+        next(new BadRequestError("Invalid data"));
       } else if (e.name === "DocumentNotFoundError") {
-        next(NotFoundError).send({ message: "Requested resource not found" });
+        next(new NotFoundError("Requested resource not found"));
       } else {
-        next(serverError).send({ message: "Server error in updateUser" });
+        next(new ServerError("Server error in updateUser"));
       }
     });
 };
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
 
   User.findOne({ email })
@@ -82,29 +82,27 @@ const createUser = (req, res) => {
       console.error(e);
 
       if (e.name === "ValidationError") {
-        next(BadRequestError).send({ message: "Invalid data" });
+        next(new BadRequestError("Invalid data"));
       } else if (e.name === "CastError") {
-        next(BadRequestError).send({ message: "Invalid data" });
+        next(new BadRequestError("Invalid data"));
       } else if (e.message === "Email already in use") {
-        next(ConflictError).send({
-          message: "Email already exists in database",
-        });
+        next(new ConflictError("Email already exists in database"));
       } else {
-        next(serverError).send({ message: "Server error from createUser" });
+        next(new ServerError("Server error from createUser"));
       }
     });
 };
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email) {
-    next(BadRequestError).send({ message: "Invalid Email" });
+    next(new BadRequestError("Invalid Email"));
     return;
   }
 
   if (!password) {
-    next(BadRequestError).send({ message: "Invalid Password" });
+    next(new BadRequestError("Invalid Password"));
     return;
   }
 
@@ -119,11 +117,9 @@ const login = (req, res) => {
       console.error(e);
 
       if (e.message === "Incorrect email or password") {
-        next(UnauthorizedError).send({
-          message: "Incorrect email or password",
-        });
+        next(new UnauthorizedError("Incorrect email or password"));
       } else {
-        next(serverError).send({ message: "An error occurred on the server" });
+        next(new ServerError("An error occurred on the server"));
       }
     });
 };

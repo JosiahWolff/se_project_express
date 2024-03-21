@@ -8,7 +8,7 @@ const notFoundError = 404;
 
 const conflictError = 409;
 
-const serverError = 500;
+const ServerError = 500;
 
 module.exports = {
   BadRequestError,
@@ -16,5 +16,5 @@ module.exports = {
   forbiddenError,
   notFoundError,
   conflictError,
-  serverError,
+  ServerError,
 };

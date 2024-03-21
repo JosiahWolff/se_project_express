@@ -31,7 +31,7 @@ app.get("/crash-test", () => {
     throw new Error("Server will crash now");
   }, 0);
 });
-app.use(errorLogger);
+
 app.use(requestLogger);
 
 app.post("/signin", validateLogIn, login);
@@ -40,6 +40,7 @@ app.get("/items", getItems);
 
 app.use(authen);
 app.use(routes);
+app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
 

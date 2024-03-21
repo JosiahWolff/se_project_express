@@ -59,7 +59,7 @@ module.exports.validateLogIn = celebrate({
 
 module.exports.validateId = celebrate({
   params: Joi.object().keys({
-    _id: Joi.string().hex().length(24).messages({
+    id: Joi.string().hex().length(24).messages({
       "string.hex": "The ID must be a hexadecimal string",
       "string.length": "The ID must be exactly 24 character long",
     }),
