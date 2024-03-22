@@ -7,7 +7,7 @@ router.use("/users", user);
 
 router.use("/items", clothingItem);
 
-router.use((next) => {
+router.use((req, res, next) => {
   next(new NotFoundError("Router not found"));
 });
 
