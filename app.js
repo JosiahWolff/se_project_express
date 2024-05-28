@@ -22,7 +22,21 @@ mongoose.connect("mongodb://127.0.0.1:27017/wtwr_db");
 
 const routes = require("./routes");
 
-app.use(cors());
+// CORS configuration
+const allowedOrigins = ["https://wtwrbyjosiah3311.crabdance.com"];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true, // Enable sending cookies
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(helmet());
 
