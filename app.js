@@ -23,8 +23,11 @@ mongoose.connect("mongodb://127.0.0.1:27017/wtwr_db");
 const routes = require("./routes");
 
 // CORS configuration
-const allowedOrigins = ["https://wtwrbyjosiah3311.crabdance.com/signin"][
-  "https://wtwrbyjosiah3311.crabdance.com/signup"
+const allowedOrigins = [
+  "https://wtwrbyjosiah3311.crabdance.com",
+  "https://wtwrbyjosiah3311.crabdance.com/items",
+  "https://wtwrbyjosiah3311.crabdance.com/signin",
+  "https://wtwrbyjosiah3311.crabdance.com/signup",
 ];
 
 const corsOptions = {
