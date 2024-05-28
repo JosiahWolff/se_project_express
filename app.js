@@ -25,9 +25,8 @@ const routes = require("./routes");
 // CORS configuration
 const allowedOrigins = [
   "https://wtwrbyjosiah3311.crabdance.com",
-  "https://wtwrbyjosiah3311.crabdance.com/items",
-  "https://wtwrbyjosiah3311.crabdance.com/signin",
-  "https://wtwrbyjosiah3311.crabdance.com/signup",
+  "https://api.wtwrbyjosiah3311.crabdance.com",
+  "https://www.wtwrByJosiah3311.crabdance.com",
 ];
 
 const corsOptions = {
